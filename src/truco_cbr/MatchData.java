@@ -36,6 +36,11 @@ public class MatchData
         return _truco;
     }
     
+    public void setCurrentRound(int round)
+    {
+        _currentRound = round;
+    }
+    
     public MatchData(Player handPlayer)
     {
         _handPlayer = handPlayer;

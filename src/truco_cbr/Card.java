@@ -32,6 +32,7 @@ public class Card
     {
         int cardValue = card.getValue();
         Integer specialCardValue = getSpecialValue(card);
+        System.out.println(specialCardValue);
         if(specialCardValue != null)
         {
             cardValue = specialCardValue;
@@ -43,13 +44,17 @@ public class Card
         return cardValue;
     }
     
-    private static int getSpecialValue(Card card)
+    private static Integer getSpecialValue(Card card)
     {
         if(_specialCards == null)
         {
             initializeSpecialCards();
         }
-        return _specialCards.get(card); 
+        if(_specialCards.containsKey(card))
+        {
+            return _specialCards.get(card);             
+        }
+        return null;
     }
     
     public int getValue()
@@ -93,6 +98,15 @@ public class Card
             return card.getType() == getType() && card.getValue() == getValue();
         }
         return false;
+    }
+    
+    @Override
+    public int hashCode() 
+    {
+        int result = 17;
+        result = 31 * result + _type.hashCode();
+        result = 31 * result + _value;
+        return result;
     }
     
     @Override

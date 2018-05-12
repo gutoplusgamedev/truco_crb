@@ -5,10 +5,11 @@
  */
 package truco_cbr;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -22,17 +23,28 @@ public class HumanPlayer extends Player
     }
 
     @Override
-    public GameRequest getRequest() 
+    public GameRequest getRequest(MatchData state) 
     {
+        TrucoRequest trucoRequest = new TrucoRequest(this);
+        EnvidoRequest envidoRequest = new EnvidoRequest(this);
         HashMap<String, GameRequest> possibleRequests = new HashMap<>();
-        possibleRequests.put("Continuar.", null);
-        possibleRequests.put("Pedir/aumentar truco.", new TrucoRequest(this));
-        possibleRequests.put("Pedir envido.", new EnvidoRequest(this));
-        try
+        possibleRequests.put("Jogar carta.", null);
+        if(trucoRequest.canMakeRequest(state, null))
         {
-            return getRequestThroughFrame(possibleRequests);
+            possibleRequests.put("Pedir/aumentar truco.", trucoRequest);
         }
-        catch(InterruptedException e) {}
+        if(envidoRequest.canMakeRequest(state, null))
+        {
+            possibleRequests.put("Pedir envido.", envidoRequest);
+        }
+        if(possibleRequests.size() > 1)
+        {
+            try
+            {
+                return (GameRequest)getMultipleChoiceFrameResult(this, getPlayerName() + " selecione uma ação", possibleRequests);
+            }
+            catch(InterruptedException e) {}
+        }
         return null;
     }
 
@@ -55,47 +67,21 @@ public class HumanPlayer extends Player
         return null;
     }
     
-    private GameRequest getRequestThroughFrame(HashMap<String, GameRequest> results) throws InterruptedException
-    {
-        String[] keys = results.keySet().toArray(new String[results.size()]);
-        String text = getPlayerName() + " selecione uma ação.";
-        ThreadedFrame frame = new ThreadedFrame(keys, text);
-        Thread t = frame.getThread();
-        t.start();
-        t.join();
-        return results.get(keys[frame.getComboBox().getSelectedIndex()]);
-    }
-    
-    public Card getCardThroughFrame(HashMap<String, Card> results) throws InterruptedException 
-    {
-        String[] keys = results.keySet().toArray(new String[results.size()]);
-        String text = getPlayerName() + " selecione uma carta para jogar.";
-        ThreadedFrame frame = new ThreadedFrame(keys, text);
-        Thread t = frame.getThread();
-        t.start();
-        t.join();
-        return results.get(keys[frame.getComboBox().getSelectedIndex()]);
-    }
-    
-    public Object getMultipleChoiceFrameResult(String text, HashMap<String, ?> choices) throws InterruptedException
+    public Object getMultipleChoiceFrameResult(Player player, String text, HashMap<String, ?> choices) throws InterruptedException
     {
         String[] keys = choices.keySet().toArray(new String[choices.size()]);
-        ThreadedFrame frame = new ThreadedFrame(keys, text);
-        Thread t = frame.getThread();
-        t.start(); t.join();
-        return choices.get(keys[frame.getComboBox().getSelectedIndex()]);
+        ThreadedFrame frame = ThreadedFrame.getFrame();
+        frame.setLayout(new FlowLayout());
+        frame.setParams(keys, text);
+        Thread thread = new Thread(frame);
         
-    }
-    
-    private RequestResponse processRequestThroughFrame(GameRequest request, HashMap<String, RequestResponse> results) throws InterruptedException
-    {
-        String[] keys = results.keySet().toArray(new String[results.size()]);
-        String frameText = request.getRequestMaker().getPlayerName() + " está pedindo "  + request.toString() + ". Selecione uma ação.";
-        ThreadedFrame frame = new ThreadedFrame(keys, frameText);
-        Thread t = frame.getThread();
-        t.start();
-        t.join();
-        return results.get(keys[frame.getComboBox().getSelectedIndex()]);
+        TrucoCardPanel panel = new TrucoCardPanel(super.playerCards);
+        frame.add(panel, BorderLayout.SOUTH);
+        frame.pack();
+        frame.setVisible(true);
+        thread.start(); thread.join();
+        frame.remove(panel);
+        return choices.get(keys[frame.getComboBox().getSelectedIndex()]);
     }
     
     private RequestResponse processEnvidoRequest(GameRequest request) throws InterruptedException
@@ -104,7 +90,7 @@ public class HumanPlayer extends Player
         results.put("Real envido", new RequestResponse(true, new EnvidoRequest(this)));
         results.put("Recusar", new RequestResponse(false));
         results.put("Aceitar", new RequestResponse(true));
-        return processRequestThroughFrame(request, results);
+        return (RequestResponse)getMultipleChoiceFrameResult(this, request.getRequestMaker().getPlayerName() + " pediu envido.", results);
     }
     
     private RequestResponse processTrucoRequest(GameRequest request) throws InterruptedException
@@ -113,7 +99,7 @@ public class HumanPlayer extends Player
         results.put("Recusar", new RequestResponse(false));
         results.put("Aceitar", new RequestResponse(true));
         results.put("Aumentar", new RequestResponse(true, new TrucoRequest(this)));
-        return processRequestThroughFrame(request, results);
+        return (RequestResponse)getMultipleChoiceFrameResult(this, request.getRequestMaker().getPlayerName() + " pediu truco.", results);
     }
     
     @Override
@@ -127,7 +113,7 @@ public class HumanPlayer extends Player
         Card selected = null;
         try
         {
-           selected = getCardThroughFrame(cardsHash);
+           selected = (Card)getMultipleChoiceFrameResult(this, getPlayerName() + " selecione uma carta", cardsHash);
         } 
         catch (InterruptedException ex) {}
         playerCards.remove(selected);

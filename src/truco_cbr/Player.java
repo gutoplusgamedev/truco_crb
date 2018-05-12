@@ -29,7 +29,7 @@ public abstract class Player
     
     /*
     */
-    public abstract GameRequest getRequest();
+    public abstract GameRequest getRequest(MatchData state);
 
     public abstract RequestResponse onRequestReceived(GameRequest request);
     

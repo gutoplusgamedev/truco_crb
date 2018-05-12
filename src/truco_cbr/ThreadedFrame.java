@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JPanel;
 import javax.swing.event.ListDataListener;
 
 /**
@@ -23,12 +24,17 @@ public class ThreadedFrame extends javax.swing.JFrame implements Runnable {
     public ThreadedFrame() 
     {
         initComponents();
-        setVisible(true);
     }
     
-    public Thread getThread()
+    private static ThreadedFrame _frame;
+    
+    public static ThreadedFrame getFrame()
     {
-        return new Thread(this);
+        if(_frame == null)
+        {
+            _frame = new ThreadedFrame();
+        }
+        return _frame;
     }
     
     public JComboBox<String> getComboBox()
@@ -36,9 +42,9 @@ public class ThreadedFrame extends javax.swing.JFrame implements Runnable {
         return options;
     }
     
-    public ThreadedFrame(String[] actions, String text)
+    public void setParams(String[] actions, String text)
     {
-        this();
+        options.removeAllItems();
         for(String a : actions)
         {
             options.addItem(a);
@@ -78,12 +84,13 @@ public class ThreadedFrame extends javax.swing.JFrame implements Runnable {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(90, 90, 90)
-                        .addComponent(label))
+                        .addComponent(label)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(options, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(okButton, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(okButton, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -91,11 +98,11 @@ public class ThreadedFrame extends javax.swing.JFrame implements Runnable {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(label)
-                .addGap(123, 123, 123)
+                .addGap(70, 70, 70)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(options, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(okButton))
-                .addContainerGap(126, Short.MAX_VALUE))
+                .addContainerGap(66, Short.MAX_VALUE))
         );
 
         pack();
@@ -115,7 +122,7 @@ public class ThreadedFrame extends javax.swing.JFrame implements Runnable {
     private javax.swing.JButton okButton;
     private javax.swing.JComboBox<String> options;
     // End of variables declaration//GEN-END:variables
-
+    
     @Override
     public void run() 
     {
