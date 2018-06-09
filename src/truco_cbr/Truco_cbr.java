@@ -5,6 +5,8 @@
  */
 package truco_cbr;
 
+import truco_cbr.Player.Player;
+import truco_cbr.Player.HumanPlayer;
 import java.awt.Dialog;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,9 +24,8 @@ public class Truco_cbr
      */
     public static void main(String[] args) 
     {
-        CardDealer dealer = new CardDealer();
-        Player p1 = new HumanPlayer(playerName1, dealer.getCards(3));
-        Player p2 = new HumanPlayer(playerName2, dealer.getCards(3));
+        Player p1 = new HumanPlayer(playerName1);
+        Player p2 = new HumanPlayer(playerName2);
         TrucoGame game = new TrucoGame(p1, p2, pointsToWin);
         game.runGameLoop();
     }

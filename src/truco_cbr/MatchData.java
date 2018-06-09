@@ -5,6 +5,9 @@
  */
 package truco_cbr;
 
+import truco_cbr.Player.Player;
+import java.util.HashMap;
+
 /**
  *
  * @author Guto
@@ -39,6 +42,25 @@ public class MatchData
     public void setCurrentRound(int round)
     {
         _currentRound = round;
+    }
+    
+    public HashMap<Player, Integer> getMatchPoints()
+    {
+        HashMap<Player, Integer> pointsPerPlayer = new HashMap<Player, Integer>();
+        if(_envido.getWinner() != null)
+        {
+            pointsPerPlayer.put(_envido.getWinner(), _envido.getWonPoints());
+        }
+        if(_truco.getWinner() != null)
+        {
+            Integer curPoints = 0;
+            if(pointsPerPlayer.containsKey(_truco.getWinner()))
+            {
+                curPoints = pointsPerPlayer.get(_truco.getWinner());                
+            }
+            pointsPerPlayer.put(_truco.getWinner(), curPoints);
+        }
+        return pointsPerPlayer;
     }
     
     public MatchData(Player handPlayer)

@@ -3,9 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package truco_cbr;
+package truco_cbr.Player;
 
+import truco_cbr.Requests.GameRequest;
+import truco_cbr.Requests.RequestResponse;
 import java.util.ArrayList;
+import truco_cbr.Card;
+import truco_cbr.MatchData;
 
 /**
  *
@@ -21,9 +25,13 @@ public abstract class Player
         return _playerName;
     }
     
-    public Player (String playerName, ArrayList<Card> cards)
+    public Player (String playerName)
     {
         _playerName = playerName;
+    }
+    
+    public void setPlayerCards(ArrayList<Card> cards)
+    {
         playerCards = cards;
     }
     

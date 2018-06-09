@@ -5,6 +5,8 @@
  */
 package truco_cbr;
 
+import truco_cbr.Player.Player;
+import truco_cbr.Requests.EnvidoRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -14,18 +16,41 @@ import java.util.HashMap;
  */
 public class EnvidoData 
 {   
-    private Player _winner;
-    private int _pointsAtStake = 0;
+    private EnvidoLevel _envidoLevel = EnvidoLevel.None;
     private EnvidoRequest _envidoRequest;
+    private Player _winner;
+    private int _wonPoints;
+
+    public EnvidoLevel getEnvidoLevel()
+    {
+        return _envidoLevel;
+    }
+    
+    public void setEnvidoLevel(EnvidoLevel level)
+    {
+        _envidoLevel = level;
+    }
+    
+    public void setWinner(Player winner, int wonPoints)
+    {
+        _winner = winner;
+        _wonPoints = wonPoints;
+    }
+    
+    public Player getWinner()
+    {
+        return _winner;
+    }
+    
+    public int getWonPoints()
+    {
+        return _wonPoints;
+    }
     
     public EnvidoData()
     {
+        _winner = null;
         _envidoRequest = null;
-    }
-    
-    public boolean isAvailable()
-    {
-        return _envidoRequest == null;
     }
     
     public void setEnvidoRequest(EnvidoRequest request)

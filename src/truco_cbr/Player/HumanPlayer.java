@@ -3,13 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package truco_cbr;
+package truco_cbr.Player;
 
+import truco_cbr.Requests.EnvidoRequest;
+import truco_cbr.Requests.TrucoRequest;
+import truco_cbr.Requests.GameRequest;
+import truco_cbr.Requests.RequestResponse;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
+import truco_cbr.Card;
+import truco_cbr.MatchData;
+import truco_cbr.ThreadedFrame;
+import truco_cbr.TrucoCardPanel;
 
 /**
  *
@@ -17,9 +25,9 @@ import java.util.HashMap;
  */
 public class HumanPlayer extends Player
 {
-    public HumanPlayer(String playerName, ArrayList<Card> cards) 
+    public HumanPlayer(String playerName) 
     {
-        super(playerName, cards);
+        super(playerName);
     }
 
     @Override

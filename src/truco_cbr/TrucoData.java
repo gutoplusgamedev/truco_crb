@@ -5,30 +5,49 @@
  */
 package truco_cbr;
 
+import truco_cbr.Player.Player;
+import truco_cbr.Requests.GameRequest;
+
 /**
  *
  * @author Guto
  */
 public class TrucoData 
 {
-    private int _gameLevel = 0;
+    private TrucoLevel _gameLevel = TrucoLevel.None;
     //O ultimo jogador a aumentar o nivel do jogo.
     private GameRequest _lastMadeRequest;
     private Player _winner;
+    private int _wonPoints;
     
     public TrucoData()
     {
-        _gameLevel = 0;
+        _gameLevel = TrucoLevel.None;
         _lastMadeRequest = null;
-        _winner = null;
     }
     
-    public void setGameLevel(int gameLevel)
+    public Player getWinner()
+    {
+        return _winner;
+    }
+    
+    public int getWonPoints()
+    {
+        return _wonPoints;
+    }
+    
+    public void setWinner(Player winner, int wonPoints)
+    {
+        _winner = winner;
+        _wonPoints = wonPoints;
+    }
+    
+    public void setGameLevel(TrucoLevel gameLevel)
     {
         _gameLevel = gameLevel;
     }
     
-    public int getGameLevel()
+    public TrucoLevel getGameLevel()
     {
         return _gameLevel;
     }
@@ -41,10 +60,5 @@ public class TrucoData
     public void setLastMadeRequest(GameRequest request)
     {
         _lastMadeRequest = request;
-    }
-    
-    public Player getWinner()
-    {
-        return _winner;
     }
 }

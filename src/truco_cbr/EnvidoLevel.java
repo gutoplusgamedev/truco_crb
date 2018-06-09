@@ -9,25 +9,26 @@ package truco_cbr;
  *
  * @author Guto
  */
-public enum TrucoLevel 
+public enum EnvidoLevel 
 {
-    None(1, 1), Truco(2, 1), Retruco(3, 2), Vale4(4, 3);
-   
-    private final int _pointsWorth, _pointsWhenOpponentGivesUp;
+    None(0, 0), Envido(2, 1), RealEnvido(5, 2);
     
-    public int getPointsWorth()
+    private final int _pointsWorth;
+    private final int _pointsWhenOtherGivesUp;
+    
+    public int getWorthPoints()
     {
         return _pointsWorth;
     }
     
     public int getPointsWhenOpponentGivesUp()
     {
-        return _pointsWhenOpponentGivesUp;
+        return _pointsWhenOtherGivesUp;
     }
     
-    TrucoLevel(int pointsWorth, int pointsWhenOpponentGivesUp)
+    EnvidoLevel(int pointsWorth, int pointsWhenOtherGivesUp)
     {
         _pointsWorth = pointsWorth;
-        _pointsWhenOpponentGivesUp = pointsWhenOpponentGivesUp;
+        _pointsWhenOtherGivesUp = pointsWhenOtherGivesUp;
     }
 }

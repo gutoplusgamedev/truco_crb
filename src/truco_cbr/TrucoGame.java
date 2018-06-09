@@ -5,6 +5,9 @@
  */
 package truco_cbr;
 
+import truco_cbr.Player.Player;
+import truco_cbr.Requests.GameRequest;
+import truco_cbr.Requests.RequestResponse;
 import java.util.HashMap;
 
 /**
@@ -30,34 +33,42 @@ public class TrucoGame
         _pointsToWin = pointsToWin;
     }
     
+    private void distributeCards(Player[] players)
+    {
+        CardDealer dealer = new CardDealer();
+        for(Player p : players)
+        {
+            p.setPlayerCards(dealer.getCards(3));
+        }
+    }
+    
     public void runGameLoop()
     {
         Player[] players = (Player[])_pointsPerPlayer.keySet().toArray(new Player[_pointsPerPlayer.size()]);
-        //Jogador mão.
-        for(Player handPlayer : players)
+        int currentPlayerIndex = 0;
+        while(true)
         {
-            System.out.println(handPlayer.getPlayerName());
-            MatchData state = new MatchData(handPlayer);
-            //Rodada do truco.
+            distributeCards(players);
+            MatchData state = new MatchData(players[currentPlayerIndex]);
             for(int round = 0; round < 3; round++)
             {
-                state.setCurrentRound(round);
-                HashMap<Player, Card> cardsPlayed = new HashMap<>();
-                //Jogada de cada jogador.
-                for(int turn = 0; turn < 2; turn++)
-                {
-                    int currentPlayerIndex = turn;
-                    runRequestChain(state, players, currentPlayerIndex);
-                    cardsPlayed.put(players[currentPlayerIndex], players[currentPlayerIndex].playCard(state));
-                }
-                //compara as cartas jogadas e decide qual é maior.
-                if(Card.getCardValue(cardsPlayed.get(players[1])) > Card.getCardValue(cardsPlayed.get(players[0])))
-                {
-                    Player tempP1 = players[0];
-                    players[0] = players[1];
-                    players[1] = tempP1;
-                }
+                playRound(state, round, currentPlayerIndex, players);
             }
+            
+            //Move para o proximo jogador a jogar.
+            currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+        }
+    }
+    
+    private void playRound(MatchData state, int round, int currentPlayerIndex, Player[] players)
+    {
+        state.setCurrentRound(round);
+        //Jogada de cada jogador.
+        for(int turn = 0; turn < 2; turn++)
+        {
+            int actualPlayer = (currentPlayerIndex + turn) % players.length;
+            runRequestChain(state, players, actualPlayer);
+            players[actualPlayer].playCard(state);
         }
     }
     
@@ -75,7 +86,7 @@ public class TrucoGame
                 if(nextRequest == null)
                 {
                     //Processa o envido, por exemplo. O truco nao possui post process.
-                   currentRequest.onRequestChainEnded(state, other);
+                   currentRequest.onRequestChainEnded(state, other, response);
                 }
                 currentRequest = nextRequest;
                 currentPlayerIndex++;

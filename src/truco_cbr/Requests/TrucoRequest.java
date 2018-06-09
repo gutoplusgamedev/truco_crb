@@ -3,7 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package truco_cbr;
+package truco_cbr.Requests;
+
+import truco_cbr.MatchData;
+import truco_cbr.Player.Player;
+import truco_cbr.TrucoData;
+import truco_cbr.TrucoLevel;
 
 /**
  *
@@ -21,12 +26,13 @@ public class TrucoRequest extends GameRequest
     {
         TrucoData truco = state.getTrucoData();
         boolean isRequesterDifferent = truco.getLastMadeRequest() == null || (truco.getLastMadeRequest().getRequestMaker() != getRequestMaker());
-        return truco.getGameLevel() < 3 && isRequesterDifferent;
+        return truco.getGameLevel() != TrucoLevel.Vale4 && isRequesterDifferent;
     }
 
     @Override
     protected void onRequestDeclined(MatchData state, Player other) 
     {
+        state.getTrucoData().setWinner(getRequestMaker(), state.getTrucoData().getGameLevel().getPointsWhenOpponentGivesUp());
         //Acabou o jogo. 
     }
     
@@ -42,7 +48,7 @@ public class TrucoRequest extends GameRequest
     protected void onRequestAccepted(MatchData state, Player other) 
     {
         //Aumenta o nivel atual do truco.
-        int nextLevel = state.getTrucoData().getGameLevel() + 1;
+        TrucoLevel nextLevel = TrucoLevel.values()[state.getTrucoData().getGameLevel().ordinal() + 1];
         state.getTrucoData().setGameLevel(nextLevel);
     }
     

@@ -3,7 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package truco_cbr;
+package truco_cbr.Requests;
+
+import truco_cbr.MatchData;
+import truco_cbr.Player.Player;
 
 /**
  *
@@ -53,7 +56,7 @@ public abstract class GameRequest
     /*
     Função chamada no ultimo request, quando a cadeia de requests terminou.
     */
-    public void onRequestChainEnded(MatchData state, Player other){}
+    public void onRequestChainEnded(MatchData state, Player other, RequestResponse lastResponse){}
     
     /*
     Callback chamado quando o request não é aceito pelo outro jogador.
